@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoShare</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .step { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 8px 15px; margin: 5px; cursor: pointer; }
+        #preview { max-width: 100%; margin-top: 10px; display: none; }
+        #results { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 CryptoShare</h1>
+        
+        <!-- Step 1: Text or Image -->
+        <div class="step">
+            <h3>1. Select Data Type</h3>
+            <select id="dataType" onchange="toggleInput()">
+                <option value="">--Select--</option>
+                <option value="text">Text</option>
+                <option value="image">Image</option>
+            </select>
+        </div>
+
+        <!-- Step 2: Dynamic Input (Text/Image) -->
+        <div class="step" id="inputSection">
+            <!-- Filled by JavaScript -->
+        </div>
+
+        <!-- Step 3: Algorithm -->
+        <div class="step">
+            <h3>2. Choose Algorithm</h3>
+            <select id="algorithm">
+                <option value="AES">AES</option>
+                <option value="RSA">RSA</option>
+            </select>
+        </div>
+
+        <!-- Step 4: Secret Key -->
+        <div class="step">
+            <h3>3. Secret Key</h3>
+            <input type="text" id="secretKey" placeholder="Enter key or generate one">
+            <button onclick="generateKey()">Generate Key</button>
+        </div>
+
+        <!-- Step 5: Encrypt Button -->
+        <div class="step">
+            <button onclick="encryptData()">Encrypt Data</button>
+        </div>
+
+        <!-- Step 6: Results -->
+        <div class="step" id="results">
+            <h3>🔐 Encrypted Data</h3>
+            <div id="encryptedOutput"></div>
+            <h3>🔑 Secret Key</h3>
+            <div id="keyOutput"></div>
+            <button onclick="shareViaWhatsApp()">Share via WhatsApp</button>
+            <button onclick="shareViaGmail()">Share via Gmail</button>
+            <button onclick="downloadFile()">Download</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
