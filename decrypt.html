@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decrypt Data | CryptoShare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea, input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #resultContainer {
+            margin-top: 20px;
+            display: none;
+        }
+        #decryptedText {
+            white-space: pre-wrap;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        #decryptedImage {
+            max-width: 100%;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔓 Decrypt Shared Data</h1>
+    
+    <div class="container">
+        <div class="input-group">
+            <label for="encryptedFile">Upload Encrypted File:</label>
+            <input type="file" id="encryptedFile" accept=".txt,.enc">
+        </div>
+        
+        <div class="input-group">
+            <label for="secretKey">Enter Secret Key:</label>
+            <input type="text" id="secretKey" placeholder="Paste the secret key here">
+        </div>
+        
+        <button onclick="decryptData()">Decrypt Data</button>
+        
+        <div id="resultContainer">
+            <h3>Decrypted Result:</h3>
+            <div id="decryptedText"></div>
+            <img id="decryptedImage" style="display:none;">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        function decryptData() {
+            const fileInput = document.getElementById('encryptedFile');
+            const secretKey = document.getElementById('secretKey').value;
+            const resultContainer = document.getElementById('resultContainer');
+            const decryptedText = document.getElementById('decryptedText');
+            const decryptedImage = document.getElementById('decryptedImage');
+            
+            // Hide previous results
+            decryptedText.textContent = '';
+            decryptedImage.style.display = 'none';
+            
+            if (!fileInput.files[0]) {
+                alert('Please upload an encrypted file!');
+                return;
+            }
+            
+            if (!secretKey) {
+                alert('Please enter the secret key!');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const encryptedData = e.target.result;
+                    const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+                    const decryptedData = decryptedBytes.toString(CryptoJS.enc.Utf8);
+                    
+                    if (!decryptedData) {
+                        alert('Decryption failed! Please check your key and file.');
+                        return;
+                    }
+                    
+                    // Check if decrypted data is an image (starts with data:image)
+                    if (decryptedData.startsWith('data:image')) {
+                        decryptedImage.src = decryptedData;
+                        decryptedImage.style.display = 'block';
+                        decryptedText.textContent = 'Image decrypted successfully!';
+                    } else {
+                        decryptedText.textContent = decryptedData;
+                    }
+                    
+                    resultContainer.style.display = 'block';
+                } catch (error) {
+                    alert('Error during decryption: ' + error.message);
+                }
+            };
+            reader.readAsText(fileInput.files[0]);
+        }
+    </script>
+</body>
+</html>
